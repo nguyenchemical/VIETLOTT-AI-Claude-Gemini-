@@ -10,6 +10,7 @@
 <meta name="application-name" content="VietlottAI">
 <meta name="theme-color" id="themeColor" content="#03030f">
 <title>VietlottAI – Dự Đoán Xổ Số Thông Minh</title>
+<link rel="apple-touch-icon" sizes="192x192" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAa+UlEQVR42u2d6aMcxXXFO4lDbKwnPQk9gSWzyZhFyj9rMDYYCIsBQ4KxE7ywxFEIIcYmQjtoAYQWkGQtNhIxNttkbk/VvNs1t/ZbS/f0h/NFerN1n1/dU9W1NDet/uNkFL9u3LSbVeM1TaNmvAj1mHy">
 <style>
   :root {
     --bg: #03030f; --card: #12121e; --text: #e0e0e0; --accent: #ff3b3f;
@@ -22,7 +23,8 @@
     background: var(--bg); color: var(--text); overflow-x: hidden;
     user-select: none; -webkit-user-select: none;
   }
-  /* Splash Screen */
+  
+  /* GIỮ NGUYÊN CSS GIAO DIỆN CỦA BẠN */
   #splash {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: var(--bg); z-index: 9999; display: flex; flex-direction: column;
@@ -36,224 +38,212 @@
   }
   @keyframes spin { 100% { transform: rotate(360deg); } }
 
-  /* Main Layout */
   .container { padding: 20px; max-width: 500px; margin: 0 auto; padding-bottom: 100px; }
-  header { text-align: center; margin-bottom: 30px; }
-  h1 { font-size: 24px; margin: 0; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
   .card {
     background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px;
     border: 1px solid var(--glass); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    position: relative; overflow: hidden;
   }
-  .label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: block; }
-  
-  /* Jackpot UI */
+  .label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; display: block; }
   .jp-container { display: flex; align-items: baseline; gap: 8px; margin-bottom: 15px; }
-  .jp-value { font-size: 28px; font-weight: 800; color: #fff; }
-  .jp-unit { color: var(--accent); font-weight: bold; }
-  .meter-bg { height: 6px; background: #222; border-radius: 3px; overflow: hidden; position: relative; }
-  .meter-fill { height: 100%; background: var(--accent); width: 0%; transition: width 1.5s cubic-bezier(0.1, 0.9, 0.2, 1); }
-
-  /* Balls UI */
-  .ball-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; justify-content: center; }
+  .jp-value { font-size: 32px; font-weight: 800; color: #fff; text-shadow: 0 0 20px rgba(255,59,63,0.3); }
+  .jp-unit { color: var(--accent); font-weight: bold; font-size: 14px; }
+  .meter-bg { height: 6px; background: #222; border-radius: 3px; overflow: hidden; margin-bottom: 10px; }
+  .meter-fill { height: 100%; background: var(--accent); width: 0%; transition: width 2s cubic-bezier(0.1, 0.9, 0.2, 1); }
+  
+  .stats-row { display: flex; justify-content: space-between; font-size: 10px; color: #555; margin-bottom: 15px; }
+  .ball-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; min-height: 40px; }
   .ball {
-    width: 38px; height: 38px; border-radius: 50%; background: #fff; color: #000;
+    width: 36px; height: 36px; border-radius: 50%; background: #fff; color: #000;
     display: flex; align-items: center; justify-content: center; font-weight: bold;
-    font-size: 14px; box-shadow: inset -3px -3px 6px rgba(0,0,0,0.2);
+    font-size: 14px; box-shadow: inset -2px -2px 4px rgba(0,0,0,0.2);
     animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
   }
-  @keyframes pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
   .ball.red { background: radial-gradient(circle at 30% 30%, #ff5f6d, #ff3b3f); color: white; }
-  .ball.blue { background: radial-gradient(circle at 30% 30%, #2196f3, #0d47a1); color: white; }
-
-  /* Controls */
-  .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-  button {
-    flex: 1; padding: 12px; border-radius: 12px; border: none; font-weight: bold;
-    cursor: pointer; transition: 0.2s; background: var(--glass); color: #fff;
+  
+  .btn-gen {
+    width: 100%; padding: 14px; border-radius: 12px; border: none; margin-top: 15px;
+    background: var(--glass); color: #fff; font-weight: bold; cursor: pointer; transition: 0.2s;
   }
-  button:active { transform: scale(0.95); opacity: 0.8; }
-  .btn-primary { background: var(--accent); }
+  .btn-gen:active { transform: scale(0.98); background: rgba(255,255,255,0.1); }
 
-  /* Fixed Bottom Nav for Actions */
+  /* Bottom Nav */
   .bottom-nav {
     position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(18,18,30,0.9);
-    backdrop-filter: blur(10px); padding: 15px; border-top: 1px solid var(--glass);
-    display: flex; justify-content: space-around; z-index: 1000;
+    backdrop-filter: blur(15px); padding: 15px 0; border-top: 1px solid var(--glass);
+    display: flex; justify-content: space-around; z-index: 1000; padding-bottom: calc(15px + env(safe-area-inset-bottom));
   }
-  .nav-item { font-size: 20px; color: #888; cursor: pointer; }
-  .nav-item.active { color: var(--accent); }
+  .nav-btn { font-size: 20px; color: #666; cursor: pointer; padding: 10px; transition: 0.3s; }
+  .nav-btn:active { color: var(--accent); transform: scale(1.2); }
 </style>
 </head>
 <body>
 
 <div id="splash">
   <div class="loader"></div>
-  <div style="font-weight: bold; letter-spacing: 2px;">VIETLOTT AI IS LOADING...</div>
-  <div id="status" style="margin-top:10px; font-size:12px; color:#555;">Đang tải thuật toán xác suất...</div>
+  <div style="font-weight: bold; letter-spacing: 3px; color: #fff;">VIETLOTT AI</div>
+  <div id="loading-text" style="font-size: 10px; color: #444; margin-top: 10px;">ANALYZING TRENDS...</div>
 </div>
 
 <div class="container">
-  <header>
-    <h1>VIETLOTT AI PRO</h1>
-    <p style="font-size: 11px; color: #666;">Hệ Thống Dự Đoán Xử Lý Bằng Trí Tuệ Nhân Tạo</p>
+  <header style="text-align: center; margin-bottom: 30px;">
+    <h1 style="margin:0; background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 28px;">VIETLOTT AI</h1>
+    <div style="font-size: 10px; color: #555; margin-top: 5px;">HỆ THỐNG DỰ ĐOÁN XÁC SUẤT BẬC CAO</div>
   </header>
 
   <div class="card">
-    <span class="label">Mega 6/45 - Jackpot Ước Tính</span>
+    <span class="label">Mega 6/45</span>
     <div class="jp-container">
-      <span id="mega-val" class="jp-value">12.0</span>
-      <span class="jp-unit">TỶ VNĐ</span>
+      <span id="mega-val" class="jp-value">--.-</span><span class="jp-unit">TỶ</span>
     </div>
     <div class="meter-bg"><div id="mega-meter" class="meter-fill"></div></div>
-    <div id="mega-balls" class="ball-row"></div>
-    <div class="btn-group">
-      <button onclick="generate('mega')">AI GENERATE</button>
+    <div class="stats-row">
+      <span id="mega-sum">TỔNG: --</span>
+      <span id="mega-bal">--C / --L</span>
     </div>
+    <div id="mega-balls" class="ball-row"></div>
+    <button class="btn-gen" onclick="handleAction('mega')">AI ANALYSIS</button>
   </div>
 
   <div class="card">
-    <span class="label">Power 6/55 - Jackpot 1</span>
+    <span class="label">Power 6/55</span>
     <div class="jp-container">
-      <span id="power-val" class="jp-value">30.0</span>
-      <span class="jp-unit">TỶ VNĐ</span>
+      <span id="power-val" class="jp-value">--.-</span><span class="jp-unit">TỶ</span>
     </div>
     <div class="meter-bg"><div id="power-meter" class="meter-fill"></div></div>
-    <div id="power-balls" class="ball-row"></div>
-    <div class="btn-group">
-      <button onclick="generate('power')" class="btn-primary">AI ANALYZE</button>
+    <div class="stats-row">
+      <span id="power-sum">TỔNG: --</span>
+      <span id="power-bal">--C / --L</span>
     </div>
+    <div id="power-balls" class="ball-row"></div>
+    <button class="btn-gen" style="background: var(--accent)" onclick="handleAction('power')">AI SMART PICK</button>
   </div>
 
   <div class="card">
-    <span class="label">Keno - Bậc 10</span>
+    <span class="label">Keno Pro (Bậc 10)</span>
     <div id="keno-balls" class="ball-row"></div>
-    <button style="width:100%; margin-top:15px;" onclick="generate('keno')">QUAY NHANH KENO</button>
+    <button class="btn-gen" onclick="handleAction('keno')">QUAY NHANH KENO</button>
   </div>
 
   <div class="card">
     <span class="label">Max 3D Pro</span>
-    <div id="max3dpro-balls" class="ball-row" style="font-size: 20px; font-weight: 800; letter-spacing: 5px;">
-      <span id="m3dp-1">000</span> - <span id="m3dp-2">000</span>
+    <div id="max3dpro-balls" class="ball-row" style="font-size: 22px; gap: 20px;">
+      <span id="m3dp-n1" style="color: #fff">000</span>
+      <span id="m3dp-n2" style="color: #fff">000</span>
     </div>
-    <button style="width:100%; margin-top:15px;" onclick="generate('max3dpro')">CHỐT SỐ MAX3D</button>
+    <button class="btn-gen" onclick="handleAction('max3dpro')">CHỐT SỐ MAX3D</button>
   </div>
 </div>
 
 <div class="bottom-nav">
-  <div class="nav-item" onclick="toggleFullScreen()">⛶</div>
-  <div class="nav-item" onclick="playSound('click')">🔔</div>
-  <div class="nav-item" onclick="location.reload()">🔄</div>
+  <div class="nav-btn" onclick="toggleFS()">⛶</div>
+  <div class="nav-btn" onclick="location.reload()">🔄</div>
+  <div class="nav-btn" onclick="alert('Cài đặt AI: Chế độ ưu tiên số Nóng đang bật')">⚙️</div>
 </div>
 
-<audio id="snd-click" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
-<audio id="snd-win" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
+<audio id="snd-pick" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
+<audio id="snd-done" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3"></audio>
 
 <script>
-/* LOGIC AI & ALGORITHMS 
-  Thuật toán mô phỏng dựa trên trọng số (Weighting Algorithm) 
-*/
-const AI_ENGINE = {
-    // Tạo mảng số với trọng số ngẫu nhiên (giả lập số "nóng" và "nguội")
-    getWeightedRandom: (max, count) => {
-        let pool = [];
-        for (let i = 1; i <= max; i++) {
-            // Mỗi số được đưa vào pool với số lần xuất hiện khác nhau để tạo xác suất AI
-            let weight = Math.floor(Math.random() * 5) + 1; 
-            for (let j = 0; j < weight; j++) pool.push(i);
-        }
-        let results = new Set();
-        while(results.size < count) {
-            let idx = Math.floor(Math.random() * pool.length);
-            results.add(pool[idx]);
-        }
-        return Array.from(results).sort((a, b) => a - b);
-    },
-    
-    predict: (type) => {
-        if(type === 'mega') return AI_ENGINE.getWeightedRandom(45, 6);
-        if(type === 'power') return AI_ENGINE.getWeightedRandom(55, 6);
-        if(type === 'keno') return AI_ENGINE.getWeightedRandom(80, 20);
-        if(type === 'max3dpro') {
-            const n1 = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-            const n2 = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-            return [n1, n2];
-        }
+/* 1. THUẬT TOÁN AI XÁC SUẤT GIỮ NGUYÊN LOGIC NHƯNG THÊM TRỌNG SỐ */
+const AI = {
+  // Tạo số dựa trên pool trọng số (giả lập phân tích lịch sử)
+  generate: (max, count) => {
+    let pool = [];
+    for (let i = 1; i <= max; i++) {
+      let weight = Math.floor(Math.random() * 5) + 1; // Số có trọng số từ 1-5
+      for (let j = 0; j < weight; j++) pool.push(i);
     }
+    let res = new Set();
+    while(res.size < count) {
+      res.add(pool[Math.floor(Math.random() * pool.length)]);
+    }
+    return Array.from(res).sort((a, b) => a - b);
+  },
+  
+  getStats: (nums) => {
+    const sum = nums.reduce((a, b) => a + b, 0);
+    const even = nums.filter(n => n % 2 === 0).length;
+    return { sum, even, odd: nums.length - even };
+  }
 };
 
-/* SYSTEM FUNCTIONS */
-function playSound(type) {
-    const s = document.getElementById(type === 'click' ? 'snd-click' : 'snd-win');
-    if(s) { s.currentTime = 0; s.play().catch(()=>{}); }
+/* 2. HỆ THỐNG ÂM THANH & RUNG */
+function feedback() {
+  if ("vibrate" in navigator) navigator.vibrate(30);
+  const s = document.getElementById('snd-pick');
+  s.currentTime = 0; s.play().catch(()=>{});
 }
 
-function triggerHaptic() {
-    if ("vibrate" in navigator) {
-        navigator.vibrate([30, 50, 30]); // Kiểu rung kép nhẹ
-    }
+function doneSound() {
+  const s = document.getElementById('snd-done');
+  s.currentTime = 0; s.play().catch(()=>{});
 }
 
-function toggleFullScreen() {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(e => {});
-    } else {
-        if (document.exitFullscreen) document.exitFullscreen();
-    }
-}
+/* 3. XỬ LÝ GIAO DIỆN */
+function render(type, nums) {
+  const container = document.getElementById(`${type}-balls`);
+  if (!container) return;
+  
+  if (type === 'max3dpro') {
+    document.getElementById('m3dp-n1').textContent = Math.floor(Math.random()*1000).toString().padStart(3,'0');
+    document.getElementById('m3dp-n2').textContent = Math.floor(Math.random()*1000).toString().padStart(3,'0');
+    doneSound();
+    return;
+  }
 
-/* UI RENDERING */
-function renderBalls(containerId, numbers, isRed = false) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = '';
-    numbers.forEach((n, index) => {
-        setTimeout(() => {
-            const b = document.createElement('div');
-            b.className = `ball ${isRed ? 'red' : ''}`;
-            b.textContent = n < 10 && typeof n === 'number' ? '0' + n : n;
-            container.appendChild(b);
-            if(index === numbers.length - 1) playSound('win');
-        }, index * 100);
-    });
-}
-
-function generate(type) {
-    triggerHaptic();
-    playSound('click');
-    const nums = AI_ENGINE.predict(type);
-    
-    if(type === 'mega') renderBalls('mega-balls', nums, true);
-    if(type === 'power') renderBalls('power-balls', nums, true);
-    if(type === 'keno') renderBalls('keno-balls', nums.slice(0, 10)); // Hiện 10 số đại diện
-    if(type === 'max3dpro') {
-        document.getElementById('m3dp-1').textContent = nums[0];
-        document.getElementById('m3dp-2').textContent = nums[1];
-    }
-}
-
-/* INITIALIZATION */
-window.addEventListener('DOMContentLoaded', () => {
-    // Giả lập cập nhật Jackpot
-    const megaJP = (Math.random() * (100 - 12) + 12).toFixed(1);
-    const powerJP = (Math.random() * (300 - 30) + 30).toFixed(1);
-    
-    document.getElementById('mega-val').textContent = megaJP;
-    document.getElementById('power-val').textContent = powerJP;
-    
-    // Thanh đo % (giả lập tỷ lệ tích lũy)
+  container.innerHTML = '';
+  nums.forEach((n, i) => {
     setTimeout(() => {
-        document.getElementById('mega-meter').style.width = (megaJP / 100 * 100) + '%';
-        document.getElementById('power-meter').style.width = (powerJP / 300 * 100) + '%';
-    }, 4500);
+      const b = document.createElement('div');
+      b.className = `ball ${type !== 'keno' ? 'red' : ''}`;
+      b.textContent = n < 10 ? '0' + n : n;
+      container.appendChild(b);
+      if (i === nums.length - 1) {
+        const stats = AI.getStats(nums);
+        const sumEl = document.getElementById(`${type}-sum`);
+        const balEl = document.getElementById(`${type}-bal`);
+        if(sumEl) sumEl.textContent = `TỔNG: ${stats.sum}`;
+        if(balEl) balEl.textContent = `${stats.even}C / ${stats.odd}L`;
+        doneSound();
+      }
+    }, i * 80);
+  });
+}
 
-    // Tắt Splash screen sau 4s
-    setTimeout(() => {
-        document.getElementById('splash').classList.add('hide');
-        // Tự động tạo số lần đầu
-        generate('mega');
-        generate('power');
-    }, 4000);
-});
+function handleAction(game) {
+  feedback();
+  let nums;
+  if(game === 'mega') nums = AI.generate(45, 6);
+  if(game === 'power') nums = AI.generate(55, 6);
+  if(game === 'keno') nums = AI.generate(80, 10);
+  if(game === 'max3dpro') nums = []; // Xử lý riêng trong render
+  render(game, nums);
+}
+
+function toggleFS() {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+  else document.exitFullscreen();
+}
+
+/* 4. KHỞI TẠO (GIỮ NGUYÊN DELAY 4S) */
+window.onload = () => {
+  // Giả lập lấy dữ liệu Jackpot
+  const mJP = (Math.random() * (90 - 12) + 12).toFixed(1);
+  const pJP = (Math.random() * (300 - 30) + 30).toFixed(1);
+  
+  document.getElementById('mega-val').textContent = mJP;
+  document.getElementById('power-val').textContent = pJP;
+
+  setTimeout(() => {
+    document.getElementById('mega-meter').style.width = (mJP/100*100) + '%';
+    document.getElementById('power-meter').style.width = (pJP/300*100) + '%';
+    document.getElementById('splash').classList.add('hide');
+    // Tự động chạy lần đầu
+    handleAction('mega');
+    handleAction('power');
+  }, 4000);
+};
 </script>
 </body>
 </html>
